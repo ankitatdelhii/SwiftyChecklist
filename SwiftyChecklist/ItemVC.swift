@@ -10,19 +10,20 @@ import UIKit
 
 class ItemVC: UITableViewController {
     
-    var itemArray = ["First", "Second", "Third", "Fourth"]
+    var itemArray = [itemModel]()
     var userDefault = UserDefaults.standard
+    let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("items.pList")
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let items = userDefault.array(forKey: "items") as? [String]{
-            itemArray = items
-        }
+        loadData()
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath)
-        cell.textLabel?.text = itemArray[indexPath.row]
+        cell.textLabel?.text = itemArray[indexPath.row].title
+        itemArray[indexPath.row].done ? (cell.accessoryType = .checkmark) : (cell.accessoryType = .none)
         return cell
     }
     
@@ -33,6 +34,8 @@ class ItemVC: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         cell?.accessoryType = cell?.accessoryType == .checkmark ? .none : .checkmark
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        saveData()
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -44,11 +47,41 @@ class ItemVC: UITableViewController {
             itemTextField = localTextField
         }
         let action = UIAlertAction(title: "Enter the name of Item!", style: .default) { (action) in
-            self.itemArray.append(itemTextField.text!)
-            self.userDefault.set(self.itemArray, forKey: "items")
+            let item = itemModel()
+            item.title = itemTextField.text!
+            item.done = false
+            self.itemArray.append(item)
+            
+            //Encoding and Storing Data
+            self.saveData()
+            
             self.tableView.reloadData()
         }
         alert.addAction(action)
         self.present(alert, animated: true)
+    }
+    
+    func saveData(){
+        let encoder = PropertyListEncoder()
+        do{
+            let data = try encoder.encode(self.itemArray)
+            try data.write(to: self.filePath!)
+        }
+        catch{
+            print(error)
+        }
+    }
+    
+    func loadData(){
+        do{
+            let data = try Data(contentsOf: filePath!)
+            let decoder = PropertyListDecoder()
+            itemArray = try decoder.decode([itemModel].self, from: data)
+            print("Data Loaded!")
+        }
+        catch{
+            print(error)
+        }
+        self.tableView.reloadData()
     }
 }
