@@ -14,10 +14,14 @@ class ItemVC: UITableViewController {
     var itemArray = [ItemModel]()
     var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var globalSearchBar = UISearchBar()
+    var selectCat : CatModel? {
+        didSet{
+            loadData()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadData()
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -50,6 +54,7 @@ class ItemVC: UITableViewController {
             let item = ItemModel(context: self.context)
             item.title = itemTextField.text!
             item.done = false
+            item.parentCat = self.selectCat
             self.itemArray.append(item)
             //Storing Data
             self.saveData()
@@ -68,7 +73,17 @@ class ItemVC: UITableViewController {
         self.tableView.reloadData()
     }
     
-    func loadData(with request : NSFetchRequest<ItemModel> = ItemModel.fetchRequest()){
+    func loadData(with request : NSFetchRequest<ItemModel> = ItemModel.fetchRequest(), addPredicate : NSPredicate? = nil){
+        print("loadData Called")
+        let catPredicate = NSPredicate(format: "parentCat.title MATCHES[cd] %@", selectCat!.title!)
+        if let newPredicate = addPredicate{
+            let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [catPredicate, newPredicate])
+            request.predicate = compoundPredicate
+        }
+        else{
+            request.predicate = catPredicate
+        }
+        
         do{
            itemArray =  try context.fetch(request)
         }
@@ -103,10 +118,6 @@ extension ItemVC : UISearchBarDelegate{
             }
             loadData()
         }
-    }
-    
-    func retrieveDefaultData(){
-        
     }
     
 }

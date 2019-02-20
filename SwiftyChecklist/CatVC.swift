@@ -19,6 +19,8 @@ class CatVC: UITableViewController {
         loadCat()
     }
     
+
+    //MARK: TableView Data Source Methods
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "catCell", for: indexPath)
         cell.textLabel?.text = catArray[indexPath.row].title
@@ -27,6 +29,20 @@ class CatVC: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return catArray.count
+    }
+    
+    //MARK: Table View Delegate Method
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "goToItems", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToItems"{
+            let destinationVC = segue.destination as! ItemVC
+            if let myIndex = tableView.indexPathForSelectedRow{
+                destinationVC.selectCat = catArray[myIndex.row]
+            }
+        }
     }
     
     
