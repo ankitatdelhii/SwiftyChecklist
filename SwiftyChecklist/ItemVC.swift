@@ -13,9 +13,7 @@ class ItemVC: UITableViewController {
     
     var itemArray = [ItemModel]()
     var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-//    var userDefault = UserDefaults.standard
-//    let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("items.pList")
-    
+    var globalSearchBar = UISearchBar()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,51 +51,62 @@ class ItemVC: UITableViewController {
             item.title = itemTextField.text!
             item.done = false
             self.itemArray.append(item)
-            
-            //Encoding and Storing Data
+            //Storing Data
             self.saveData()
-            
-            self.tableView.reloadData()
         }
         alert.addAction(action)
         self.present(alert, animated: true)
     }
     
     func saveData(){
-//        let encoder = PropertyListEncoder()
-//        do{
-//            let data = try encoder.encode(self.itemArray)
-//            try data.write(to: self.filePath!)
-//        }
-//        catch{
-//            print(error)
-//        }
         do{
             try context.save()
         }
         catch{
             print(error)
         }
+        self.tableView.reloadData()
     }
     
-    func loadData(){
-//        do{
-//            let data = try Data(contentsOf: filePath!)
-//            let decoder = PropertyListDecoder()
-//            itemArray = try decoder.decode([itemModel].self, from: data)
-//            print("Data Loaded!")
-//        }
-//        catch{
-//            print(error)
-//        }
-//        self.tableView.reloadData()
-        
-        let request : NSFetchRequest<ItemModel> = ItemModel.fetchRequest()
+    func loadData(with request : NSFetchRequest<ItemModel> = ItemModel.fetchRequest()){
         do{
            itemArray =  try context.fetch(request)
         }
         catch{
             print(error)
         }
+        self.tableView.reloadData()
     }
+}
+
+extension ItemVC : UISearchBarDelegate{
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if searchBar.text! == ""{
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            loadData()
+        }
+        else{
+            let request : NSFetchRequest<ItemModel> = ItemModel.fetchRequest()
+            request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+            request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+            loadData(with: request)
+        }
+        
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text! == ""{
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            loadData()
+        }
+    }
+    
+    func retrieveDefaultData(){
+        
+    }
+    
 }
