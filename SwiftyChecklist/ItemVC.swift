@@ -7,12 +7,14 @@
 //
 
 import UIKit
+import CoreData
 
 class ItemVC: UITableViewController {
     
-    var itemArray = [itemModel]()
-    var userDefault = UserDefaults.standard
-    let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("items.pList")
+    var itemArray = [ItemModel]()
+    var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+//    var userDefault = UserDefaults.standard
+//    let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("items.pList")
     
 
     override func viewDidLoad() {
@@ -47,7 +49,7 @@ class ItemVC: UITableViewController {
             itemTextField = localTextField
         }
         let action = UIAlertAction(title: "Enter the name of Item!", style: .default) { (action) in
-            let item = itemModel()
+            let item = ItemModel(context: self.context)
             item.title = itemTextField.text!
             item.done = false
             self.itemArray.append(item)
@@ -62,10 +64,16 @@ class ItemVC: UITableViewController {
     }
     
     func saveData(){
-        let encoder = PropertyListEncoder()
+//        let encoder = PropertyListEncoder()
+//        do{
+//            let data = try encoder.encode(self.itemArray)
+//            try data.write(to: self.filePath!)
+//        }
+//        catch{
+//            print(error)
+//        }
         do{
-            let data = try encoder.encode(self.itemArray)
-            try data.write(to: self.filePath!)
+            try context.save()
         }
         catch{
             print(error)
@@ -73,15 +81,23 @@ class ItemVC: UITableViewController {
     }
     
     func loadData(){
+//        do{
+//            let data = try Data(contentsOf: filePath!)
+//            let decoder = PropertyListDecoder()
+//            itemArray = try decoder.decode([itemModel].self, from: data)
+//            print("Data Loaded!")
+//        }
+//        catch{
+//            print(error)
+//        }
+//        self.tableView.reloadData()
+        
+        let request : NSFetchRequest<ItemModel> = ItemModel.fetchRequest()
         do{
-            let data = try Data(contentsOf: filePath!)
-            let decoder = PropertyListDecoder()
-            itemArray = try decoder.decode([itemModel].self, from: data)
-            print("Data Loaded!")
+           itemArray =  try context.fetch(request)
         }
         catch{
             print(error)
         }
-        self.tableView.reloadData()
     }
 }
