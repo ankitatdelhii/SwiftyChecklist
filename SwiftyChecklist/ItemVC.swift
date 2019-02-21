@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import SwipeCellKit
 
 class ItemVC: UITableViewController {
     
@@ -22,10 +23,16 @@ class ItemVC: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.rowHeight = 80.0
     }
     
+
+    
+    //MARK: TableView Data Source Methods
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! SwipeTableViewCell
+        cell.delegate = self
         cell.textLabel?.text = itemArray[indexPath.row].title
         itemArray[indexPath.row].done ? (cell.accessoryType = .checkmark) : (cell.accessoryType = .none)
         return cell
@@ -35,6 +42,7 @@ class ItemVC: UITableViewController {
         return itemArray.count
     }
     
+    //MARK: TableView Delegate Method
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         cell?.accessoryType = cell?.accessoryType == .checkmark ? .none : .checkmark
@@ -42,6 +50,8 @@ class ItemVC: UITableViewController {
         saveData()
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    //MARK: Add Button
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         var itemTextField = UITextField()
@@ -58,11 +68,13 @@ class ItemVC: UITableViewController {
             self.itemArray.append(item)
             //Storing Data
             self.saveData()
+            self.tableView.reloadData()
         }
         alert.addAction(action)
         self.present(alert, animated: true)
     }
     
+    //MARK: Save and Load Data Methods
     func saveData(){
         do{
             try context.save()
@@ -70,7 +82,6 @@ class ItemVC: UITableViewController {
         catch{
             print(error)
         }
-        self.tableView.reloadData()
     }
     
     func loadData(with request : NSFetchRequest<ItemModel> = ItemModel.fetchRequest(), addPredicate : NSPredicate? = nil){
@@ -120,4 +131,34 @@ extension ItemVC : UISearchBarDelegate{
         }
     }
     
+}
+
+extension ItemVC : SwipeTableViewCellDelegate{
+
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        guard orientation == .right else { return nil }
+        
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+            // handle action by updating model with deletion
+            print("Some Delete Operation")
+            print(indexPath.row)
+            self.context.delete(self.itemArray[indexPath.row])
+            self.itemArray.remove(at: indexPath.row)
+            self.saveData()
+        }
+        
+        // customize the action appearance
+        deleteAction.image = UIImage(named: "delete")
+        
+        return [deleteAction]
+    }
+    
+    
+    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeOptions()
+        options.expansionStyle = .destructive
+        options.transitionStyle = .border
+        return options
+    }
+
 }

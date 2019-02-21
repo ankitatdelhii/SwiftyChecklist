@@ -1,0 +1,6 @@
+framework module Pods_SwiftyChecklist {
+  umbrella header "Pods-SwiftyChecklist-umbrella.h"
+
+  export *
+  module * { export * }
+}
