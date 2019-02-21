@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import SwipeCellKit
 
-class ItemVC: UITableViewController {
+class ItemVC: SwipeParent {
     
     var itemArray = [ItemModel]()
     var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -31,8 +31,9 @@ class ItemVC: UITableViewController {
     //MARK: TableView Data Source Methods
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! SwipeTableViewCell
-        cell.delegate = self
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! SwipeTableViewCell
+//        cell.delegate = self
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         cell.textLabel?.text = itemArray[indexPath.row].title
         itemArray[indexPath.row].done ? (cell.accessoryType = .checkmark) : (cell.accessoryType = .none)
         return cell
@@ -103,6 +104,15 @@ class ItemVC: UITableViewController {
         }
         self.tableView.reloadData()
     }
+    
+    override func deleteAction(){
+        let currentIndex = super.currentIndexPath!
+        print("Some Delete Operation")
+        print(currentIndex.row)
+        self.context.delete(self.itemArray[currentIndex.row])
+        self.itemArray.remove(at: currentIndex.row)
+        self.saveData()
+    }
 }
 
 extension ItemVC : UISearchBarDelegate{
@@ -133,32 +143,34 @@ extension ItemVC : UISearchBarDelegate{
     
 }
 
-extension ItemVC : SwipeTableViewCellDelegate{
+extension ItemVC {
 
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-        guard orientation == .right else { return nil }
-        
-        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
-            // handle action by updating model with deletion
-            print("Some Delete Operation")
-            print(indexPath.row)
-            self.context.delete(self.itemArray[indexPath.row])
-            self.itemArray.remove(at: indexPath.row)
-            self.saveData()
-        }
-        
-        // customize the action appearance
-        deleteAction.image = UIImage(named: "delete")
-        
-        return [deleteAction]
-    }
+//    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+//        guard orientation == .right else { return nil }
+//
+//        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+//            // handle action by updating model with deletion
+//            print("Some Delete Operation")
+//            print(indexPath.row)
+//            self.context.delete(self.itemArray[indexPath.row])
+//            self.itemArray.remove(at: indexPath.row)
+//            self.saveData()
+//        }
+//
+//        // customize the action appearance
+//        deleteAction.image = UIImage(named: "delete")
+//
+//        return [deleteAction]
+//    }
+//
+//
+//    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+//        var options = SwipeOptions()
+//        options.expansionStyle = .destructive
+//        options.transitionStyle = .border
+//        return options
+//    }
     
-    
-    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
-        var options = SwipeOptions()
-        options.expansionStyle = .destructive
-        options.transitionStyle = .border
-        return options
-    }
+
 
 }
