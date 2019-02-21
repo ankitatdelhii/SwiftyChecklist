@@ -45,6 +45,7 @@ class ItemVC: SwipeParent {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         cell?.accessoryType = cell?.accessoryType == .checkmark ? .none : .checkmark
+//        cell?.tintColor = UIColor.blue
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         saveData()
         tableView.deselectRow(at: indexPath, animated: true)

@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		0E34BB696AAE657376E02F1D /* Pods_SwiftyChecklist.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1441CA076FFC608054FE7C7 /* Pods_SwiftyChecklist.framework */; };
 		9D171C26221EE92C00741DE1 /* SwipeParent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D171C25221EE92C00741DE1 /* SwipeParent.swift */; };
+		9D171C2C221F4EE700741DE1 /* ss1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9D171C2A221F4EE700741DE1 /* ss1.jpg */; };
+		9D171C2D221F4EE700741DE1 /* ss2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9D171C2B221F4EE700741DE1 /* ss2.jpg */; };
+		9D171C2F221F4EFE00741DE1 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 9D171C2E221F4EFE00741DE1 /* .gitignore */; };
 		9D30AF2C221C9485005ECC38 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D30AF2B221C9485005ECC38 /* AppDelegate.swift */; };
 		9D30AF31221C9485005ECC38 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D30AF2F221C9485005ECC38 /* Main.storyboard */; };
 		9D30AF33221C9486005ECC38 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D30AF32221C9486005ECC38 /* Assets.xcassets */; };
@@ -21,6 +24,9 @@
 /* Begin PBXFileReference section */
 		0B7A2A51CB5C6ED834F15BA1 /* Pods-SwiftyChecklist.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftyChecklist.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftyChecklist/Pods-SwiftyChecklist.debug.xcconfig"; sourceTree = "<group>"; };
 		9D171C25221EE92C00741DE1 /* SwipeParent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeParent.swift; sourceTree = "<group>"; };
+		9D171C2A221F4EE700741DE1 /* ss1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ss1.jpg; sourceTree = "<group>"; };
+		9D171C2B221F4EE700741DE1 /* ss2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ss2.jpg; sourceTree = "<group>"; };
+		9D171C2E221F4EFE00741DE1 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		9D30AF28221C9485005ECC38 /* SwiftyChecklist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftyChecklist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D30AF2B221C9485005ECC38 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D30AF30221C9485005ECC38 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -46,6 +52,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9D171C27221F4ADB00741DE1 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				9D30AF2F221C9485005ECC38 /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9D171C28221F4AFB00741DE1 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				9D171C25221EE92C00741DE1 /* SwipeParent.swift */,
+				9DA1E8BD221DEFDE0062DDE1 /* CatVC.swift */,
+				9D30AF3D221C94E3005ECC38 /* ItemVC.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		9D171C29221F4B1B00741DE1 /* Screenshots */ = {
+			isa = PBXGroup;
+			children = (
+				9D171C2A221F4EE700741DE1 /* ss1.jpg */,
+				9D171C2B221F4EE700741DE1 /* ss2.jpg */,
+			);
+			path = Screenshots;
+			sourceTree = "<group>";
+		};
 		9D30AF1F221C9485005ECC38 = {
 			isa = PBXGroup;
 			children = (
@@ -67,15 +100,15 @@
 		9D30AF2A221C9485005ECC38 /* SwiftyChecklist */ = {
 			isa = PBXGroup;
 			children = (
+				9D171C28221F4AFB00741DE1 /* Controller */,
+				9D171C27221F4ADB00741DE1 /* View */,
 				9DA1E8BC221D7EE20062DDE1 /* Model */,
-				9D171C25221EE92C00741DE1 /* SwipeParent.swift */,
-				9DA1E8BD221DEFDE0062DDE1 /* CatVC.swift */,
+				9D171C29221F4B1B00741DE1 /* Screenshots */,
 				9D30AF2B221C9485005ECC38 /* AppDelegate.swift */,
-				9D30AF3D221C94E3005ECC38 /* ItemVC.swift */,
-				9D30AF2F221C9485005ECC38 /* Main.storyboard */,
 				9D30AF32221C9486005ECC38 /* Assets.xcassets */,
 				9D30AF34221C9486005ECC38 /* LaunchScreen.storyboard */,
 				9D30AF37221C9486005ECC38 /* Info.plist */,
+				9D171C2E221F4EFE00741DE1 /* .gitignore */,
 			);
 			path = SwiftyChecklist;
 			sourceTree = "<group>";
@@ -166,7 +199,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D30AF36221C9486005ECC38 /* LaunchScreen.storyboard in Resources */,
+				9D171C2D221F4EE700741DE1 /* ss2.jpg in Resources */,
+				9D171C2C221F4EE700741DE1 /* ss1.jpg in Resources */,
 				9D30AF33221C9486005ECC38 /* Assets.xcassets in Resources */,
+				9D171C2F221F4EFE00741DE1 /* .gitignore in Resources */,
 				9D30AF31221C9485005ECC38 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
