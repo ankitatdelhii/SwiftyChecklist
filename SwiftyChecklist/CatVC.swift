@@ -9,20 +9,21 @@
 import UIKit
 import CoreData
 
-class CatVC: UITableViewController {
+class CatVC: SwipeParent {
     
     var catArray = [CatModel]()
     var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.rowHeight = 80.0
         loadCat()
     }
     
 
     //MARK: TableView Data Source Methods
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "catCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         cell.textLabel?.text = catArray[indexPath.row].title
         return cell
     }
@@ -58,7 +59,9 @@ class CatVC: UITableViewController {
             item.title = localTextField.text!
             self.catArray.append(item)
             self.saveCat()
+            self.tableView.reloadData()
         }
+        
         alert.addAction(action)
         self.present(alert, animated: true)
     }
@@ -70,7 +73,6 @@ class CatVC: UITableViewController {
         catch{
             print(error)
         }
-        tableView.reloadData()
     }
     
     func loadCat(){
@@ -83,6 +85,13 @@ class CatVC: UITableViewController {
         }
         tableView.reloadData()
     }
-
+    
+    //MARK: Category Deletion
+    override func deleteAction() {
+        let currentIndex = super.currentIndexPath!
+        context.delete(catArray[currentIndex.row])
+        catArray.remove(at: currentIndex.row)
+        saveCat()
+    }
 
 }

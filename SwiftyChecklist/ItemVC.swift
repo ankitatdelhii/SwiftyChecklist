@@ -31,8 +31,6 @@ class ItemVC: SwipeParent {
     //MARK: TableView Data Source Methods
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! SwipeTableViewCell
-//        cell.delegate = self
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         cell.textLabel?.text = itemArray[indexPath.row].title
         itemArray[indexPath.row].done ? (cell.accessoryType = .checkmark) : (cell.accessoryType = .none)
@@ -105,10 +103,9 @@ class ItemVC: SwipeParent {
         self.tableView.reloadData()
     }
     
+    //MARK: Item Deletion
     override func deleteAction(){
         let currentIndex = super.currentIndexPath!
-        print("Some Delete Operation")
-        print(currentIndex.row)
         self.context.delete(self.itemArray[currentIndex.row])
         self.itemArray.remove(at: currentIndex.row)
         self.saveData()
